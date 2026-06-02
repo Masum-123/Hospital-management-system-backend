@@ -1,14 +1,10 @@
 from datetime import datetime, timedelta
-
 from jose import jwt, JWTError
 from passlib.context import CryptContext
-
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-
 SECRET_KEY = "secret123"
 ALGORITHM = "HS256"
-
 pwd_context = CryptContext(
     schemes=["bcrypt"],
     deprecated="auto"
@@ -16,24 +12,14 @@ pwd_context = CryptContext(
 
 # ✅ THIS IS THE KEY CHANGE (Swagger will show ONLY token box)
 bearer_scheme = HTTPBearer()
-
-
 def hash_password(password: str):
     return pwd_context.hash(password)
-
-
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
-
-
 def create_access_token(data: dict):
-
     to_encode = data.copy()
-
     expire = datetime.utcnow() + timedelta(hours=1)
-
     to_encode.update({"exp": expire})
-
     return jwt.encode(
         to_encode,
         SECRET_KEY,

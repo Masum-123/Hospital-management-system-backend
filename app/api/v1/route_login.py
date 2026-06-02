@@ -1,18 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
 from app.db.session import get_db
 from app.schemas.schema_user import UserLogin
 from app.crud.crud_user import authenticate_user
 from app.core.security import create_access_token
-
-
 router = APIRouter(
     prefix="/login",
     tags=["Login"]
 )
-
-
 @router.post("/")
 def login(
     user: UserLogin,

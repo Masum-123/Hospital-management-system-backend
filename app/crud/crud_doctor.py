@@ -1,8 +1,15 @@
-from sqlalchemy.orm import Session
+from app.crud.crud_base import CRUDBase
 from app.models.models_doctor import Doctor
 
 
-def create_doctor(db: Session, doctor):
+class CRUDDoctor(CRUDBase):
+    pass
+
+
+doctor_crud = CRUDDoctor(Doctor)
+
+
+def create_doctor(db, doctor):
     db_doctor = Doctor(
         name=doctor.name,
         age=doctor.age,
@@ -13,39 +20,16 @@ def create_doctor(db: Session, doctor):
         address=doctor.address
     )
 
-    db.add(db_doctor)
-    db.commit()
-    db.refresh(db_doctor)
-
-    return db_doctor
+    return doctor_crud.create(db, db_doctor)
 
 
-def get_doctors(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(Doctor).offset(skip).limit(limit).all()
+def get_doctors(db, skip: int = 0, limit: int = 10):
+    return doctor_crud.get_all(db, skip, limit)
 
 
-def update_doctor(db: Session, doctor_id: str, doctor_data):
-    doctor = db.query(Doctor).filter(Doctor.id == doctor_id).first()
-
-    if not doctor:
-        return None
-
-    for key, value in doctor_data.model_dump(exclude_unset=True).items():
-        setattr(doctor, key, value)
-
-    db.commit()
-    db.refresh(doctor)
-
-    return doctor
+def update_doctor(db, doctor_id: str, doctor_data):
+    return doctor_crud.update(db, doctor_id, doctor_data)
 
 
-def delete_doctor(db: Session, doctor_id: str):
-    doctor = db.query(Doctor).filter(Doctor.id == doctor_id).first()
-
-    if not doctor:
-        return None
-
-    db.delete(doctor)
-    db.commit()
-
-    return doctor
+def delete_doctor(db, doctor_id: str):
+    return doctor_crud.delete(db, doctor_id)

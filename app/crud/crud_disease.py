@@ -1,39 +1,30 @@
-from sqlalchemy.orm import Session
+from app.crud.crud_base import CRUDBase
 from app.models.models_disease import Disease
 
 
-def create_disease(db: Session, disease):
-    db_disease = Disease(**disease.model_dump())
-    db.add(db_disease)
-    db.commit()
-    db.refresh(db_disease)
-    return db_disease
+class CRUDDisease(CRUDBase):
+    pass
 
 
-def get_diseases(db: Session):
-    return db.query(Disease).all()
+disease_crud = CRUDDisease(Disease)
 
 
-def update_disease(db: Session, disease_id: str, disease_data):
-    disease = db.query(Disease).filter(Disease.id == disease_id).first()
+def create_disease(db, disease):
+    db_disease = Disease(
+        disease_name=disease.disease_name,
+        specialized_doctor_id=disease.specialized_doctor_id
+    )
 
-    if not disease:
-        return None
-
-    for key, value in disease_data.model_dump(exclude_unset=True).items():
-        setattr(disease, key, value)
-
-    db.commit()
-    db.refresh(disease)
-    return disease
+    return disease_crud.create(db, db_disease)
 
 
-def delete_disease(db: Session, disease_id: str):
-    disease = db.query(Disease).filter(Disease.id == disease_id).first()
+def get_diseases(db, skip: int = 0, limit: int = 10):
+    return disease_crud.get_all(db, skip, limit)
 
-    if not disease:
-        return None
 
-    db.delete(disease)
-    db.commit()
-    return disease
+def update_disease(db, disease_id: str, disease_data):
+    return disease_crud.update(db, disease_id, disease_data)
+
+
+def delete_disease(db, disease_id: str):
+    return disease_crud.delete(db, disease_id)

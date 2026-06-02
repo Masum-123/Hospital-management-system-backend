@@ -1,9 +1,6 @@
 import uuid
-
 from sqlalchemy import Column, String
 from app.db.base import Base
-
-
 class User(Base):
     __tablename__ = "users"
 
@@ -13,7 +10,6 @@ class User(Base):
         default=lambda: str(uuid.uuid4()),
         index=True
     )
-
     username = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)

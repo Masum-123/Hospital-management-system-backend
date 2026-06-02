@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from app.crud.crud_base import CRUDBase
 
 from app.models.models_appointment import Appointment
 from app.models.models_disease import Disease
@@ -17,12 +17,14 @@ ALL_SLOTS = [
 ]
 
 
-def get_available_slots(
-    db: Session,
-    doctor_id: str,
-    appointment_date: str
-):
+class CRUDAppointment(CRUDBase):
+    pass
 
+
+appointment_crud = CRUDAppointment(Appointment)
+
+
+def get_available_slots(db, doctor_id: str, appointment_date: str):
     booked = db.query(Appointment).filter(
         Appointment.doctor_id == doctor_id,
         Appointment.appointment_date == appointment_date
@@ -36,21 +38,13 @@ def get_available_slots(
     return [
         {
             "slot": slot,
-            "status": (
-                "Booked"
-                if slot in booked_slots
-                else "Available"
-            )
+            "status": "Booked" if slot in booked_slots else "Available"
         }
         for slot in ALL_SLOTS
     ]
 
 
-def create_appointment(
-    db: Session,
-    appointment
-):
-
+def create_appointment(db, appointment):
     disease = db.query(Disease).filter(
         Disease.id == appointment.disease_id
     ).first()
@@ -74,7 +68,6 @@ def create_appointment(
     selected_slot = None
 
     for slot in slots:
-
         if slot["slot"] == appointment.appointment_time:
             selected_slot = slot
 
@@ -85,33 +78,18 @@ def create_appointment(
         return "Slot already booked"
 
     db_appointment = Appointment(
-
         patient_name=appointment.patient_name,
-
         disease_id=disease.id,
         disease_name=disease.disease_name,
-
         doctor_id=doctor.id,
         doctor_name=doctor.name,
-
         appointment_date=appointment.appointment_date,
-
         appointment_time=appointment.appointment_time,
-
         status="Booked"
     )
 
-    db.add(db_appointment)
-
-    db.commit()
-
-    db.refresh(db_appointment)
-
-    return db_appointment
+    return appointment_crud.create(db, db_appointment)
 
 
-def get_appointments(
-    db: Session
-):
-
-    return db.query(Appointment).all()
+def get_appointments(db):
+    return appointment_crud.get_all(db)

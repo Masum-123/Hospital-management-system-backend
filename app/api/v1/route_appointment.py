@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException
-
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
@@ -29,7 +28,6 @@ router = APIRouter(
 def get_diseases(
     db: Session = Depends(get_db)
 ):
-
     diseases = db.query(Disease).all()
 
     return [
@@ -46,7 +44,6 @@ def disease_doctors(
     disease_id: str,
     db: Session = Depends(get_db)
 ):
-
     disease = db.query(Disease).filter(
         Disease.id == disease_id
     ).first()
@@ -80,7 +77,6 @@ def doctor_slots(
     appointment_date: str,
     db: Session = Depends(get_db)
 ):
-
     return get_available_slots(
         db,
         doctor_id,
@@ -96,14 +92,12 @@ def book_appointment(
     appointment: AppointmentCreate,
     db: Session = Depends(get_db)
 ):
-
     result = create_appointment(
         db,
         appointment
     )
 
     if isinstance(result, str):
-
         raise HTTPException(
             status_code=400,
             detail=result
@@ -119,5 +113,4 @@ def book_appointment(
 def all_appointments(
     db: Session = Depends(get_db)
 ):
-
     return get_appointments(db)

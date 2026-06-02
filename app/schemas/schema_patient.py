@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 from typing import Optional
-
-
 class PatientCreate(BaseModel):
     name: str
     age: int
@@ -9,8 +7,6 @@ class PatientCreate(BaseModel):
     phone: str
     address: str
     disease: str
-
-
 class PatientUpdate(BaseModel):
     name: Optional[str] = None
     age: Optional[int] = None
@@ -18,8 +14,6 @@ class PatientUpdate(BaseModel):
     phone: Optional[str] = None
     address: Optional[str] = None
     disease: Optional[str] = None
-
-
 class PatientResponse(BaseModel):
     id: str
     name: str
@@ -28,6 +22,5 @@ class PatientResponse(BaseModel):
     phone: str
     address: str
     disease: str
-
     class Config:
         from_attributes = True

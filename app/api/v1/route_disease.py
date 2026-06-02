@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
 from app.db.session import get_db
 from app.schemas.schema_disease import DiseaseCreate, DiseaseUpdate, DiseaseResponse
 from app.crud.crud_disease import (
@@ -9,13 +8,10 @@ from app.crud.crud_disease import (
     update_disease,
     delete_disease
 )
-
 router = APIRouter(
     prefix="/diseases",
     tags=["Disease Management"]
 )
-
-
 @router.post("/", response_model=DiseaseResponse)
 def add_disease(disease: DiseaseCreate, db: Session = Depends(get_db)):
     return create_disease(db, disease)
