@@ -1,6 +1,6 @@
 # Hospital Management System Backend
 ## Project Structure
-app/
+  ```app/
 ├── api/
 │   ├── base.py
 │   └── v1/
@@ -35,6 +35,7 @@ app/
 │   ├── schemas_appointment.py
 │   └── schemas_history.py
 └── main.py
+```
 ## Features
 - User Registration
 - User Login
