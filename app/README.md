@@ -56,6 +56,7 @@
 - Passlib bcrypt
 - Swagger UI
 # API Flow
+```
 Register User
 ↓
 Login User
@@ -75,6 +76,7 @@ Doctor Views Appointments
 Doctor Adds Patient History
 ↓
 Patient Views History
+```
 # Modules
 
 ## 1. Authentication Module
